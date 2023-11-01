@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:task_list/models/list_item.dart';
+import 'package:task_list/models/tarefa.dart';
+import 'package:task_list/widgets/card_tarefa.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
-  List<ListItem> lista = [];
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final TextEditingController listItemController = TextEditingController();
+
+  List<Tarefa> lista = [];
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +37,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   Expanded(
                       child: TextField(
+                    controller: listItemController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: "Insira sua tarefa",
@@ -43,7 +52,15 @@ class HomePage extends StatelessWidget {
                       backgroundColor: Colors.deepPurple,
                       padding: EdgeInsets.all(10),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      //método pra quando incluir o item
+                      String titulo = listItemController.text;
+                      setState(() {
+                        Tarefa tarefa = Tarefa(title: titulo, dateTime: DateTime.now());
+                        lista.add(tarefa);
+                      });
+                      listItemController.clear();
+                    },
                     child: Icon(
                       Icons.add,
                       size: 40,
@@ -55,42 +72,8 @@ class HomePage extends StatelessWidget {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
-                    Container(
-                      child: Text("asjkjsdhfçasldfh"),
-                    ),
+                    for (Tarefa tarefa in lista)
+                      CardTarefa(titulo: tarefa.title, data: tarefa.dateTime),
                   ],
                 ),
               ),
@@ -98,7 +81,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      "Você tem 0 tarefas pendentes",
+                      "Você tem ${lista.length} tarefas pendentes",
                       style: TextStyle(
                         fontSize: 18,
                       ),
