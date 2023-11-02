@@ -56,7 +56,8 @@ class _HomePageState extends State<HomePage> {
                       //método pra quando incluir o item
                       String titulo = listItemController.text;
                       setState(() {
-                        Tarefa tarefa = Tarefa(title: titulo, dateTime: DateTime.now());
+                        Tarefa tarefa =
+                            Tarefa(titulo: titulo, dataHora: DateTime.now());
                         lista.add(tarefa);
                       });
                       listItemController.clear();
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                   shrinkWrap: true,
                   children: [
                     for (Tarefa tarefa in lista)
-                      CardTarefa(titulo: tarefa.title, data: tarefa.dateTime),
+                      CardTarefa(tarefa: tarefa, deletar: deletarTarefa),
                   ],
                 ),
               ),
@@ -91,7 +92,9 @@ class _HomePageState extends State<HomePage> {
                     width: 8,
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        limparLista();
+                      },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.deepPurple,
                           padding: EdgeInsets.all(16)),
@@ -103,5 +106,55 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void deletarTarefa(Tarefa tarefa) {
+    Tarefa tarefaDeletada = tarefa;
+    int posicaoNaLista = lista.indexOf(tarefaDeletada);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+      " A tarefa ${tarefaDeletada.titulo} foi excluída",
+    )));
+    setState(() {
+      lista.remove(tarefa);
+    });
+  }
+
+  void limparLista() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("ATENÇÃO"),
+              content: Text("Você tem certeza que quer apagar a lista toda?"),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        lista.clear();
+                      });
+                      Navigator.pop(context);
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    child: Text(
+                      "Sim",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    )),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    child: Text("Não",
+                        style: TextStyle(
+                          color: Colors.white,
+                        )))
+              ],
+            ));
   }
 }

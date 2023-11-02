@@ -1,7 +1,7 @@
 class Tarefa{
 
-  Tarefa({required this.title,required this.dateTime});
+  Tarefa({required this.titulo,required this.dataHora});
 
-  DateTime dateTime;
-  String title;
+  DateTime dataHora;
+  String titulo;
 }
