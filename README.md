@@ -1,6 +1,6 @@
 # task_list
 
-Uma lista de tarefas
+Uma lista de tarefas gerada na Aula de Programação para Dispositvos Móveis I - Fatec Itapira
 
 ## Getting Started
 
