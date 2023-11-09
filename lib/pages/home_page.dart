@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_list/models/tarefa.dart';
+import 'package:task_list/respositories/lista_repositorio.dart';
 import 'package:task_list/widgets/card_tarefa.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,6 +14,17 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController listItemController = TextEditingController();
 
   List<Tarefa> lista = [];
+  ListaRepositorio listaRepositorio=ListaRepositorio();
+
+  @override
+  void initState() {
+    super.initState();
+    ListaRepositorio().recuperarLista().then((value) {
+      setState(() {
+        lista = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +73,7 @@ class _HomePageState extends State<HomePage> {
                         lista.add(tarefa);
                       });
                       listItemController.clear();
+                      listaRepositorio.salvarLista(lista);
                     },
                     child: Icon(
                       Icons.add,
@@ -112,12 +125,23 @@ class _HomePageState extends State<HomePage> {
     Tarefa tarefaDeletada = tarefa;
     int posicaoNaLista = lista.indexOf(tarefaDeletada);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-      " A tarefa ${tarefaDeletada.titulo} foi excluída",
-    )));
+      content: Text(
+        " A tarefa ${tarefaDeletada.titulo} foi excluída",
+      ),
+      action: SnackBarAction(
+          label: "Desfazer",
+          onPressed: () {
+            setState(() {
+              lista.insert(posicaoNaLista, tarefaDeletada);
+            });
+            listaRepositorio.salvarLista(lista);
+          }),
+      duration: Duration(seconds: 5),
+    ));
     setState(() {
       lista.remove(tarefa);
     });
+    listaRepositorio.salvarLista(lista);
   }
 
   void limparLista() {
@@ -132,6 +156,7 @@ class _HomePageState extends State<HomePage> {
                       setState(() {
                         lista.clear();
                       });
+                      listaRepositorio.salvarLista(lista);
                       Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(
