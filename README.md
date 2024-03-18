@@ -1,6 +1,7 @@
-# task_list
+# lista_de_tarefas_aula
 
 Uma lista de tarefas gerada na Aula de Programação para Dispositivos Móveis I - Fatec Itapira
+Como forma de persistencia dos dados foi utilizado o pacote shared_preferences para manter as tarefas da lista.
 
 ## Getting Started
 
